@@ -3,12 +3,20 @@ image:
   repository: 985539801924.dkr.ecr.eu-west-1.amazonaws.com/rgk/rgk
   tag: latest
   pullPolicy: Always
-
 service:
-  type: LoadBalancer
+  type: ClusterIP  # Changed to ClusterIP since we're using ALB Ingress
   port: 5000
   targetPort: 5000
-
+ingress:  # Added ingress configuration
+  enabled: true
+  className: alb
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-port: '5000'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 5000}]'
 resources:
   limits:
     cpu: 200m
