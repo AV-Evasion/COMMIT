@@ -2,16 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Release.Name }}-flask-service
-  labels:
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name: flask-app
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.service.port }}
+    - name: http
+      port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort }}
       protocol: TCP
-      name: http  # Add this name
   selector:
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name: flask-app
+    app: flask-app  # Changed to match pod labels
